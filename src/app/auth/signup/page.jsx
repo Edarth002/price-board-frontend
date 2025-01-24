@@ -38,8 +38,11 @@ export const SignUp = () => {
   };
 
   return (
-    <div className="bg-blue-50 w-full h-screen pt-20 md:px-auto px-5 ">
-      <div className="md:w-1/3 w-full mx-auto  rounded-lg bg-white p-8 text-gray-100 ">
+    <div className=" w-full h-screen pt-10 md:px-auto px-2 ">
+      <h1 className="text-center text-3xl font-bold mb-10">
+        Your Neighbourhood Product Price Board
+      </h1>
+      <div className="md:w-1/3 w-full min-w-[350px] mx-auto  rounded-lg bg-white p-8 text-gray-800 ">
         <p className="text-center text-xl font-bold">Sign Up</p>
         <form className="mt-6 space-y-4">
           <div>
@@ -51,12 +54,12 @@ export const SignUp = () => {
               type="text"
               id="username"
               name="username"
-              className="w-full rounded-md border border-gray-600 bg-gray-900 p-3 text-gray-800 outline-none focus:border-blue-400"
+              className="w-full rounded-md border border-gray-600 p-3 text-gray-800 outline-none focus:border-blue-400"
               placeholder="Enter your username"
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-400">
+            <label htmlFor="email" className="block text-sm text-gray-600">
               Email
             </label>
             <input
@@ -64,7 +67,7 @@ export const SignUp = () => {
               type="email"
               id="email"
               name="email"
-              className="w-full rounded-md border border-gray-600 bg-gray-900 p-3 text-gray-800 outline-none focus:border-blue-400"
+              className="w-full rounded-md border border-gray-600  p-3 text-gray-800 outline-none focus:border-blue-400"
               placeholder="Enter your Email"
             />
           </div>
@@ -77,7 +80,7 @@ export const SignUp = () => {
               type="password"
               id="password"
               name="password"
-              className="w-full rounded-md border border-gray-600 bg-gray-900 p-3 text-gray-800 outline-none focus:border-blue-400"
+              className="w-full rounded-md border border-gray-600  p-3 text-gray-800 outline-none focus:border-blue-400"
               placeholder="Enter your password"
             />
           </div>

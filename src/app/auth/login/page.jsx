@@ -5,7 +5,6 @@ import LoginUser from "./loginuser";
 import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
-  //LoginForm is name of component and loginForm with camel Notation is name of object that is submitted
   const router = useRouter();
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -27,6 +26,12 @@ export const LoginForm = () => {
       setSucess("Welcome back, redirecting you to our awesome software");
       console.log(success);
 
+      // Save the token in localStorage
+      localStorage.setItem("token", data.token);
+
+      // Redirect to categories page
+      router.push("/authpages/categories");
+
       setError("");
     } catch (error) {
       setError(error.message);
@@ -34,12 +39,13 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="bg-blue-50 w-full h-screen pt-20 md:px-0 px-5">
-      <div className="md:w-1/3 w-full mx-auto rounded-lg bg-white p-8 text-gray-800 mt-20">
+    <div className="w-full h-screen pt-10 md:px-0 px-2">
+      <h1 className="text-center text-3xl font-bold mb-10">Welcome Back</h1>
+      <div className="md:w-1/3 w-full min-w-[350px] mx-auto rounded-lg bg-white p-8 text-gray-800 mt-20">
         <p className="text-center text-xl font-bold">Login</p>
         <form className="mt-6 space-y-4">
           <div>
-            <label for="email" className="block text-sm text-gray-600">
+            <label htmlFor="email" className="block text-sm text-gray-600 mb-2">
               Email
             </label>
             <input
@@ -47,12 +53,15 @@ export const LoginForm = () => {
               type="text"
               id="email"
               name="email"
-              className="w-full rounded-md border border-gray-600  p-3 text-gray-100 outline-none focus:border-blue-400"
+              className="w-full rounded-md border border-gray-600 p-3 text-gray-100 outline-none focus:border-blue-400"
               placeholder="Enter your email"
             />
           </div>
           <div>
-            <label for="password" className="block text-sm text-gray-600">
+            <label
+              htmlFor="password"
+              className="block text-sm text-gray-600 mb-2 mt-5"
+            >
               Password
             </label>
             <input
@@ -60,14 +69,9 @@ export const LoginForm = () => {
               type="password"
               id="password"
               name="password"
-              className="w-full rounded-md border border-gray-600 bg-gray-900 p-3 text-gray-800 outline-none focus:border-blue-400"
+              className="w-full rounded-md border border-gray-600 p-3 text-gray-800 outline-none focus:border-blue-400"
               placeholder="Enter your password"
             />
-            <div className="mt-2 text-right text-xs text-gray-600">
-              <a href="#" className="hover:underline hover:text-blue-400">
-                Forgot Password?
-              </a>
-            </div>
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           {success && <p className="text-green-500 text-sm">{success}</p>}
@@ -79,11 +83,11 @@ export const LoginForm = () => {
             Sign in
           </button>
         </form>
-        <p className="mt-6 text-center text-sm text-gray-400">
+        <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?
           <Link
             href="/auth/signup"
-            className="font-semibold text-gray-100 hover:underline hover:text-blue-400"
+            className="font-semibold text-gray-800 hover:underline hover:text-blue-400"
           >
             Sign up
           </Link>
