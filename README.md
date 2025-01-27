@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Product Utilities Web Application
 
-## Getting Started
+This project is a web-based utility application designed to manage product-related functionalities and email notifications. Built with React (Next.js), it includes key features like user authentication, product and category management, and dynamic interactions with external APIs.
 
-First, run the development server:
+## Features
 
+### 1. User Authentication
+- **Sign Up and Sign In**: Secure user authentication system with seamless navigation between sign-up and sign-in pages.
+- **Session Management**: Tokens for maintaining user sessions.
+
+### 2. Product Utilities
+- **Calculate Product Price**: Enter a product ID to fetch and calculate the price using a backend API.
+- **Add Products**: A dedicated section to add new products dynamically.
+
+### 3. Category Management
+- **Add Categories**: Easily manage product categories through the intuitive interface.
+
+### 4. Email Notifications
+- **Send Email**: Allows sending structured email notifications to recipients.
+
+### 5. User Feedback
+- **Loading States**: Visual feedback during API calls.
+- **Success & Error Messages**: Clear and non-overlapping notifications for user actions.
+
+---
+
+## Tech Stack
+
+### Frontend
+- **Framework**: Next.js
+- **UI Styling**: Tailwind CSS
+
+### Backend
+- **API**: Custom APIs for price calculation, email notifications, and product management
+- **Base URL**: `https://product-price-board.onrender.com`
+
+### State Management
+- **React Hooks**: `useState` for managing component state.
+
+---
+
+
+---
+
+## Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-repo-link.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Navigate to the project directory:
+```bash
+cd project-directory
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Install dependencies:
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Start the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+NEXT_PUBLIC_API_BASE_URL=https://product-price-board.onrender.com
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Usage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Sign Up / Sign In**:
+   - Navigate to the Sign-Up page to create an account.
+   - Use the Sign-In page to log into the application.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Calculate Price**:
+   - Enter the product ID and click "Calculate Price".
+
+3. **Send Email Notification**:
+   - Fill in the recipient email, subject, and message body fields, then click "Send Email".
+
+4. **Manage Categories and Products**:
+   - Navigate to the respective sections to add categories and products.
+
+---
+
+## Contact
+
+For any inquiries, please contact:
+- **Email**: support@productutilitiesapp.com
+- **Author**: Arthur Onyeanusi
+
+---
+
+Enjoy using the Product Price-Board Web Application!
+
