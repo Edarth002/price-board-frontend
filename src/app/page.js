@@ -1,10 +1,9 @@
-import Image from "next/image";
-import SignUp from "./auth/signup/page";
+import ProductUtilities from "./pages/home/page";
 
 export default function Home() {
   return (
     <div>
-      <SignUp />
+      <ProductUtilities />
     </div>
   );
 }

@@ -6,7 +6,7 @@
   --font-impact: "Inter", sans-serif;
 }
 
-.loading-spinner {
+/* .loading-spinner {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,4 +87,4 @@
 .line-12 {
   transform: rotate(330deg) translateY(-100%);
   animation-delay: 0s;
-}
+} */
