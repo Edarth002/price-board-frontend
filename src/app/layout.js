@@ -1,8 +1,8 @@
 import "./globals.css";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import { AuthProvider } from "./context/authcontext";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], weight: ['400', '700'] });
 
 export const metadata = {
   title: "Product Price Board",
