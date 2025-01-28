@@ -1,184 +1,158 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useAuth } from "@/app/context/authcontext";
 
-export default function Products() {
-  const [products, setProducts] = useState([]); // All products
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    categoryId: "",
-    image: null, // image will be a file object
-  });
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const { user } = useAuth();
-  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import { useEffect, useState } from "react";
+import { fetchProducts, addProduct } from "@/app/apis/products";
 
+const ProductsPage = () => {
+  const [products, setProducts] = useState([]); // Store products
+  const [name, setName] = useState(""); // Product name input
+  const [price, setPrice] = useState(""); // Product price input
+  const [categoryId, setCategoryId] = useState(""); // Product category ID input
+  const [image, setImage] = useState(null); // Product image input
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(""); // Error message
+
+  // Fetch products on component mount
   useEffect(() => {
-    fetchProducts(); // Fetch products on mount
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch products.");
+      }
+    };
+
+    loadProducts();
   }, []);
 
-  // Fetch products from the API
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/products?populate=category`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch products.");
-
-      const data = await res.json();
-      setProducts(data); // Populate the products list
-    } catch (err) {
-      console.error("Error fetching products:", err);
-    }
-  };
-
-  // Handle adding a new product
-  const handleAddProduct = async () => {
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    if (
-      !newProduct.name.trim() ||
-      !newProduct.price ||
-      !newProduct.categoryId ||
-      !newProduct.image
-    ) {
-      setErrorMessage("All fields are required.");
-      return;
-    }
+  // Handle form submission
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(""); // Reset previous error
 
     try {
-      // Prepare form data for uploading the image
-      const formData = new FormData();
-      formData.append("name", newProduct.name);
-      formData.append("price", newProduct.price);
-      formData.append("category_id", newProduct.categoryId);
-      formData.append("image", newProduct.image); // Correct key for the image
-
-      const res = await fetch(`${BASE_URL}/products`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`, // Authorization header
-        },
-        body: formData,
+      const newProduct = await addProduct({
+        name,
+        price: parseFloat(price),
+        category_id: parseInt(categoryId),
+        image,
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to add product.");
-      }
-
-      const data = await res.json();
-
-      // Add the new product to the list
-      setProducts((prev) => [...prev, data]);
-      setSuccessMessage(`Product "${data.name}" added successfully!`);
-      setNewProduct({ name: "", price: "", categoryId: "", image: null }); // Clear input fields
+      setProducts((prev) => [...prev, newProduct]); // Add new product to list
+      setName(""); // Reset form fields
+      setPrice("");
+      setCategoryId("");
+      setImage(null);
     } catch (err) {
-      setErrorMessage(err.message);
+      console.error(err);
+      setError(`Error adding product: ${err.message}`); // Show detailed error
+    } finally {
+      setLoading(false);
     }
-  };
-
-  // Handle image selection
-  const handleImageChange = (e) => {
-    setNewProduct({ ...newProduct, image: e.target.files[0] });
-  };
-
-  // Clear success or error messages
-  const clearMessages = () => {
-    setErrorMessage(null);
-    setSuccessMessage(null);
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
 
-      {/* Add Product Section */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold">Add a New Product</h2>
-        <input
-          type="text"
-          placeholder="Product Name"
-          value={newProduct.name}
-          onChange={(e) => {
-            setNewProduct({ ...newProduct, name: e.target.value });
-            clearMessages();
-          }}
-          className="border rounded p-2 w-full mt-2 mb-2"
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={newProduct.price}
-          onChange={(e) => {
-            setNewProduct({ ...newProduct, price: e.target.value });
-            clearMessages();
-          }}
-          className="border rounded p-2 w-full mt-2 mb-2"
-        />
-        <input
-          type="text"
-          placeholder="Category ID"
-          value={newProduct.categoryId}
-          onChange={(e) => {
-            setNewProduct({ ...newProduct, categoryId: e.target.value });
-            clearMessages();
-          }}
-          className="border rounded p-2 w-full mt-2 mb-2"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="border rounded p-2 w-full mt-2 mb-2"
-        />
-        <button
-          onClick={handleAddProduct}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Add Product
-        </button>
-      </div>
+      {/* Error Message */}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {/* Error/Success Messages */}
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
+      {/* Add Product Form */}
+      <form className="mb-6" onSubmit={handleAddProduct}>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2" htmlFor="name">
+            Product Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            className="w-full border rounded px-3 py-2"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2" htmlFor="price">
+            Price
+          </label>
+          <input
+            id="price"
+            type="number"
+            className="w-full border rounded px-3 py-2"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-sm font-medium mb-2"
+            htmlFor="categoryId"
+          >
+            Category ID
+          </label>
+          <input
+            id="categoryId"
+            type="number"
+            className="w-full border rounded px-3 py-2"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2" htmlFor="image">
+            Image
+          </label>
+          <input
+            id="image"
+            type="file"
+            className="w-full border rounded px-3 py-2"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          disabled={loading}
+        >
+          {loading ? "Adding..." : "Add Product"}
+        </button>
+      </form>
 
       {/* Products List */}
       <div>
-        <h2 className="text-lg font-semibold mb-2">Existing Products</h2>
+        <h2 className="text-xl font-semibold mb-4">Product List</h2>
         {products.length === 0 ? (
-          <p>No products found.</p>
+          <p>No products available.</p>
         ) : (
-          <ul>
+          <ul className="space-y-4">
             {products.map((product) => (
               <li
                 key={product.id}
-                className="border-b py-4 flex flex-col gap-4"
+                className="border rounded p-4 shadow-sm flex justify-between items-center"
               >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    {/* Product Image */}
-                    <img
-                      src={product.image?.url || "/default-image.jpg"} // Use default image if no image URL is available
-                      alt={product.name}
-                      className="w-24 h-24 object-cover mr-4"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-xl">{product.name}</h3>
-                      <p className="text-gray-500">Price: ${product.price}</p>
-                      <p className="text-gray-500">
-                        Category ID: {product.categoryId}
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <h3 className="font-bold">{product.name}</h3>
+                  <p>Price: ${product.price}</p>
+                  <p>Category ID: {product.category_id}</p>
                 </div>
+                {product.image_url && (
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                )}
               </li>
             ))}
           </ul>
@@ -186,4 +160,6 @@ export default function Products() {
       </div>
     </div>
   );
-}
+};
+
+export default ProductsPage;

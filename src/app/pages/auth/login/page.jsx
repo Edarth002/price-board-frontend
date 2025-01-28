@@ -1,87 +1,66 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/app/context/authcontext";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function Login() {
   const { loginUser, loading, error, clearError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    // Clear errors when component mounts or email/password changes
-    clearError();
-  }, [email, password, clearError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Clear previous messages
-    setSuccessMessage("");
-
-    try {
-      await loginUser(email, password); // Login the user
-      setSuccessMessage("Login successful! Redirecting...");
-      setTimeout(() => {
-        router.push("/pages/categories");
-      }, 2000);
-    } catch {
-      // Error handling is already managed in the AuthProvider
-    }
+    clearError();
+    await loginUser(email, password);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen md:mx-0 mx-3">
-      <h1 className="text-center text-3xl font-bold -mt-28 mb-20">
-        We are glad to have you back!
-      </h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 max-w-[30rem]">
-        <h1 className="text-xl font-semibold mb-4">Login</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        {/* Display error or success messages */}
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {successMessage && (
-          <p className="text-green-500 mt-2">{successMessage}</p>
-        )}
-
-        <button
-          type="submit"
-          className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Login"}
-        </button>
-        <p className="text-gray-600 mt-4">
-          Don't have an account with us?{" "}
-          <Link
-            href="/pages/auth/signup"
-            className="text-gray-800 hover:text-blue-600 cursor-pointer hover:underline"
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 disabled:opacity-50"
           >
-            Signup
-          </Link>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center">
+          Don't have an account?{" "}
+          <a
+            href="/pages/auth/signup"
+            className="text-blue-500 hover:underline"
+          >
+            Sign up
+          </a>
         </p>
-      </form>
+      </div>
     </div>
   );
 }
